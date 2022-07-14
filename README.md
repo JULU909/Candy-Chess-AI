@@ -1,4 +1,5 @@
-# Cady , a chess AI 
+# Candy
+
 
 ##### To play the game download the picture file (chesspieces2) + chessmain + chessai and run the chessmain file
 
