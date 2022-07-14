@@ -5,4 +5,10 @@
 
 ## Documentation :
 
-thje
+Coding mechanics used : 
+
+            - Min max algorithms
+            - Alpha beta pruning
+            - Simplified Evaluation Function as the heuristic
+            - Pygame module for the environment and UI 
+            
