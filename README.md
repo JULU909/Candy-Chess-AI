@@ -14,4 +14,4 @@ Coding mechanics used :
             - Pygame module for the environment and UI 
             
 
-The ai is still being improved but it was able to beat a 1200 rated chess bot which is above 65th percentile of all humans
+The ai is still being improved but it was able to beat a 1500 rated chess player which is above 85th percentile of all humans
