@@ -6,6 +6,8 @@
 
 ## Documentation :
 
+CandyChessAi v1.0 
+
 Coding mechanics used : 
 
             - Min max algorithms
@@ -15,3 +17,7 @@ Coding mechanics used :
             
 
 The ai is still being improved but it was able to beat a 1500 rated chess player which is above 85th percentile of all humans
+
+
+
+
