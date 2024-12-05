@@ -42,7 +42,6 @@ def main():
                 #ai.smartmove(gs)
                 #chessai.gamestate.whitetomove = True
 
-
                 ai.minmaxing(gs, "b", 0, 1, "w",-10000,100000)
                 #move , pieces = ai.getallpossiblemoves(gs,"b")
                 #ai.bestmove(pieces,move,gs,"b")
@@ -671,96 +670,92 @@ class ai():
             return moves,piece
             break
 
-
-
-
-
-
-
-
-
-
-
     dep2max  = -20000
-    def minmaxing(gs,color,depth,ismax,ocolor,alpha,beta):
+    def minmaxing(gs, color, depth, is_max, ocolor, alpha, beta):
+        """
+        Minimax algorithm with alpha-beta pruning.
+        
+        Args:
+            gs: Game state object containing the current board state.
+            color: Current player color.
+            depth: Current depth in the minimax tree.
+            is_max: Boolean flag to determine maximizer or minimizer.
+            ocolor: Opponent's color.
+            alpha: Alpha value for pruning.
+            beta: Beta value for pruning.
 
-        temp.list = copy.deepcopy(gs.board)
-        if depth == 4 :
-            list = copy.deepcopy(gs.board)
+        Returns:
+            int: Evaluated score of the board.
+        """
 
-            point = points(gs,"b")
-            gs.board = copy.deepcopy(list)
-
-
-            return point
-
+        # Base case: Evaluate the board state at max depth
+        if depth == 4:
+            current_board = copy.deepcopy(gs.board)
+            score = points(gs, "b")
+            gs.board = current_board
+            return score
 
         moves, pieces = ai.getallpossiblemoves(gs, color)
-        list = copy.deepcopy(gs.board)
-        temppoints = []
-        tempmoves = []
-        max = 0
-        pointmax = -10000000
-        pointmin = 100000000
-        indc = 0
+        current_board = copy.deepcopy(gs.board)
+
+        best_move = None
+        best_piece = None
+        point_max = float('-inf')
+        point_min = float('inf')
+
+        max_index = 0
+        terminate = False
+
         for i in range(len(pieces)):
-            if indc == 1:
+            if terminate:
                 break
-            if i%2 == 0 :
+
+            if i % 2 == 0:
                 piece = pieces[i]
-            else :
-                count = pieces[i]
-                for i in range(count) :
-                    move = moves[i+max]
-                    t1 , t2 = chessai.gamestate.castlingw , chessai.gamestate.castlingb
-                    if valid(gs,[piece,move]):
+            else:
+                move_count = pieces[i]
+                for j in range(move_count):
+                    move = moves[j + max_index]
+                    t1, t2 = chessai.gamestate.castlingw, chessai.gamestate.castlingb
 
-                        point = ai.minmaxing(gs,ocolor,depth+1,ismax+1,color,alpha,beta)
+                    if valid(gs, [piece, move]):
+                        point = ai.minmaxing(gs, ocolor, depth + 1, is_max + 1, color, alpha, beta)
 
-                        if depth == 0 :
-                            print(point,piece,move)
+                        if depth == 0:
+                            print(point, piece, move)
 
                         chessai.gamestate.castlingw, chessai.gamestate.castlingb = t1, t2
-                        gs.board = copy.deepcopy(list)
+                        gs.board = copy.deepcopy(current_board)
 
-                        if(ismax%2 == 1) :
-                            if point > pointmax :
-                                pointmax = point
-                                if point > alpha :
-                                    alpha = point
+                        if is_max % 2 == 1:  # Maximizing player
+                            if point > point_max:
+                                point_max = point
+                                alpha = max(alpha, point)
+                                best_move = move
+                                best_piece = piece
+                            if beta <= alpha:
+                                terminate = True
+                                break
+                        else:  # Minimizing player
+                            if point < point_min:
+                                point_min = point
+                                beta = min(beta, point)
+                                best_move = move
+                                best_piece = piece
+                            if beta <= alpha:
+                                terminate = True
+                                break
 
-                                bestmove = move
-                                bestpiece = piece
-                                if beta <= alpha :
-                                    indc = 1
-                                    break
-                        else :
-                            if point < pointmin :
-                                pointmin = point
-                                if point < beta :
-                                    beta = point
-                                bestmove = move
-                                bestpiece = piece
-                                if beta <= alpha :
-                                    indc =1
-                                    break
+                max_index += move_count
 
+        if depth == 0:
+            print(depth, is_max, best_piece, best_move, point_max)
+            valid(gs, [best_piece, best_move])
 
-                max+= count
-
-
-        if depth == 0 :
-            print(depth, ismax, bestpiece, bestmove, pointmax)
-            valid(gs,[bestpiece,bestmove])
-
-        if (ismax % 2 == 1):
-            if pointmax == -10000000 :
-                pointmax == 0
-            return pointmax
+        if is_max % 2 == 1:
+            return point_max if point_max != float('-inf') else 0
         else:
-            if pointmin == 10000000 :
-                pointmin == 0
-            return pointmin
+            return point_min if point_min != float('inf') else 0
 
 
 
